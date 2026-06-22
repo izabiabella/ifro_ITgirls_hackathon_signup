@@ -12,6 +12,9 @@
   overflow: hidden;
   position: relative;
   font-family: Arial, sans-serif;
+  touch-action: none;          /* impede o navegador de rolar/dar zoom ao tocar */
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 .palco-corrida {
@@ -257,6 +260,10 @@
   display: none;
 }
 
+/* por padrão (desktop) mostra instruções de teclado e esconde as de toque */
+.instrucoes-mobile  { display: none; }
+.instrucoes-desktop { display: inline; }
+
 .botao-reiniciar {
   display: inline-block;
   margin-top: 14px;
@@ -352,6 +359,9 @@
     padding: 4px 8px;
   }
 
+  .instrucoes-desktop { display: none; }
+  .instrucoes-mobile  { display: inline; }
+
   .vida-jogador { font-size: 1rem; top: 8px; right: 8px; }
   .placar       { font-size: 0.75rem; top: 36px; right: 8px; }
   .mensagem     { font-size: 1rem; width: 90%; }
@@ -387,10 +397,30 @@
   height: 56px;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  touch-action: manipulation;
   user-select: none;
 }
 
 .controles-touch .grupo-lr {
   display: flex;
   gap: 10px;
+}
+
+/* telas bem pequenas (celulares estreitos) */
+@media (max-width: 380px) {
+  .jogador  { width: 90px; }
+  .smurf-com-botao { width: 75px; }
+  .obstaculo { width: 65px !important; }
+  .bitcoin   { width: 32px !important; }
+  .controles-touch button { width: 48px; height: 48px; font-size: 1.25rem; }
+}
+
+/* celular em modo paisagem: HUD mais discreto pra não tampar o jogo */
+@media (max-height: 480px) and (orientation: landscape) {
+  .controles-touch { bottom: 6px; }
+  .controles-touch button { width: 44px; height: 44px; font-size: 1.1rem; }
+  .instrucoes { display: none; }
+  .vida-jogador { top: 4px; right: 4px; font-size: 0.9rem; }
+  .placar { top: 24px; right: 4px; font-size: 0.7rem; }
 }

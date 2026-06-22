@@ -82,6 +82,69 @@ window.addEventListener("load", () => {
 
 document.addEventListener("keydown", iniciarMusica, { once: true });
 document.addEventListener("click",   iniciarMusica, { once: true });
+document.addEventListener("touchstart", iniciarMusica, { once: true, passive: true });
+
+// ── MOBILE: BOTÕES DE TOQUE ──────────────────────────────────
+// Usamos touchstart (com preventDefault) em vez do "click" comum
+// para responder instantaneamente, sem o delay de ~300ms do
+// navegador e sem disparar clique fantasma/zoom no botão.
+function ligarBotaoToque(elemento, acao) {
+  if (!elemento) return;
+  const executar = (e) => {
+    e.preventDefault();
+    acao();
+  };
+  elemento.addEventListener("touchstart", executar, { passive: false });
+  // mantém o clique também, para quem estiver testando em mobile
+  // via mouse (emulador) ou em telas híbridas touch+mouse
+  elemento.addEventListener("click", (e) => { e.preventDefault(); acao(); });
+}
+
+ligarBotaoToque(document.getElementById("btn-esq"),  () => moverJogador(-1));
+ligarBotaoToque(document.getElementById("btn-dir"),  () => moverJogador(+1));
+ligarBotaoToque(document.getElementById("btn-pulo"), () => pular());
+
+// ── MOBILE: GESTOS DE SWIPE NA TELA DE JOGO ──────────────────
+// Além dos botões, dá pra jogar arrastando o dedo:
+// swipe esquerda/direita troca de raia, swipe pra cima ou
+// toque rápido (tap) faz pular — igual aos jogos de corrida.
+(function configurarSwipe() {
+  const zona = document.getElementById("zona-jogo");
+  if (!zona) return;
+
+  const DISTANCIA_MINIMA = 30; // px
+  let inicioX = 0, inicioY = 0, inicioTempo = 0;
+
+  zona.addEventListener("touchstart", (e) => {
+    const t = e.changedTouches[0];
+    inicioX = t.clientX;
+    inicioY = t.clientY;
+    inicioTempo = Date.now();
+  }, { passive: true });
+
+  zona.addEventListener("touchend", (e) => {
+    const t = e.changedTouches[0];
+    const deltaX = t.clientX - inicioX;
+    const deltaY = t.clientY - inicioY;
+    const deltaTempo = Date.now() - inicioTempo;
+    const absX = Math.abs(deltaX);
+    const absY = Math.abs(deltaY);
+
+    if (absX < DISTANCIA_MINIMA && absY < DISTANCIA_MINIMA) {
+      // toque rápido e curto, sem arrasto = pular
+      if (deltaTempo < 250) pular();
+      return;
+    }
+
+    if (absX > absY) {
+      // swipe horizontal
+      moverJogador(deltaX > 0 ? +1 : -1);
+    } else if (deltaY < 0) {
+      // swipe pra cima = pular
+      pular();
+    }
+  }, { passive: true });
+})();
 
 // ── UTILITÁRIOS ──────────────────────────────────────────────
 function aplicarRaia(elemento, indice) {

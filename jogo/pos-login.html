@@ -2,6 +2,8 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#000000">
   <title>Boss Fight: Smurf Ladrão</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
@@ -52,8 +54,14 @@
     </div>
 
     <div class="instrucoes">
-      ⬅️ ➡️ : trocar de raia<br>
-      ⬆️ / espaço : saltar barreira<br>
+      <span class="instrucoes-desktop">
+        ⬅️ ➡️ : trocar de raia<br>
+        ⬆️ / espaço : saltar barreira<br>
+      </span>
+      <span class="instrucoes-mobile">
+        ⬅️ ➡️ deslize ou toque nos botões<br>
+        ⬆️ deslize pra cima ou toque rápido pra saltar<br>
+      </span>
       🪙 colete 5 bitcoins pra lançar seu poder!
     </div>
 
@@ -68,9 +76,9 @@
   <!-- Controles touch (visíveis só em mobile via CSS) -->
   <div class="controles-touch">
     <div class="grupo-lr">
-      <button id="btn-esq" ontouchstart="moverJogador(-1)">⬅️</button>
-      <button id="btn-dir" ontouchstart="moverJogador(+1)">➡️</button>
+      <button id="btn-esq" type="button">⬅️</button>
+      <button id="btn-dir" type="button">➡️</button>
     </div>
-    <button id="btn-pulo" ontouchstart="pular()">⬆️</button>
+    <button id="btn-pulo" type="button">⬆️</button>
   </div></body>
 </html>
