@@ -114,8 +114,14 @@ ligarBotaoToque(document.getElementById("btn-pulo"), () => pular());
 
   const DISTANCIA_MINIMA = 30; // px
   let inicioX = 0, inicioY = 0, inicioTempo = 0;
+  let tocouNoBotaoContinuar = false;
 
   zona.addEventListener("touchstart", (e) => {
+    // se o toque começou em cima do botão "Continuar" (smurf derrotado),
+    // não interpretamos como swipe/pulo — deixamos o clique normal acontecer
+    tocouNoBotaoContinuar = !!e.target.closest("#botao-na-mao");
+    if (tocouNoBotaoContinuar) return;
+
     const t = e.changedTouches[0];
     inicioX = t.clientX;
     inicioY = t.clientY;
@@ -123,6 +129,8 @@ ligarBotaoToque(document.getElementById("btn-pulo"), () => pular());
   }, { passive: true });
 
   zona.addEventListener("touchend", (e) => {
+    if (tocouNoBotaoContinuar) return;
+
     const t = e.changedTouches[0];
     const deltaX = t.clientX - inicioX;
     const deltaY = t.clientY - inicioY;
@@ -145,6 +153,19 @@ ligarBotaoToque(document.getElementById("btn-pulo"), () => pular());
     }
   }, { passive: true });
 })();
+
+// ── MOBILE: garante que o toque no botão "Continuar" navegue ─
+// Em alguns navegadores mobile o clique sintético após o toque
+// pode atrasar ou não disparar. Aqui garantimos a navegação
+// também via touchend, direto no botão, sem depender disso.
+botaoNaMao.addEventListener("touchend", (e) => {
+  if (!capturando) return;
+  e.preventDefault();
+  ativo = false;
+  mensagemEl.style.display = "none";
+  alert("Parabéns! Você usou o poder dos Bitcoins, derrotou o Smurf Ladrão e conseguiu Encerrar a experiência. 🎉");
+  window.location.href = "../index_final.html";
+}, { passive: false });
 
 // ── UTILITÁRIOS ──────────────────────────────────────────────
 function aplicarRaia(elemento, indice) {
