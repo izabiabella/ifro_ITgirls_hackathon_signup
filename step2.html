@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Inscrição ADS - Etapa 2</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Michroma&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/estilo_step2.css" />
+</head>
+<body>
+
+  <div id="fakeCursor" class="fake-cursor"></div>
+
+  <!-- Pop-up: sexo inválido -->
+  <div id="overlaySexo" class="overlay hidden">
+    <div class="popup-aviso">
+      <p class="popup-aviso-texto">
+        <span class="popup-destaque">Masculino</span> &nbsp;ou&nbsp; <span class="popup-destaque">Feminino</span><br><br>
+      </p>
+      <button class="btn-popup-confirmar" onclick="document.getElementById('overlaySexo').classList.add('hidden')">Ok</button>
+    </div>
+  </div>
+
+  <div class="page">
+
+    <div class="logo-area">
+      <img src="imagens/ifrologo.jpeg" alt="IFRO Campus Ariquemes" class="logo" />
+    </div>
+
+    <div class="stepper">
+      <div class="step done"       id="step1">1</div>
+      <div class="step-line done"  id="line1"></div>
+      <div class="step active"     id="step2">2</div>
+      <div class="step-line"       id="line2"></div>
+      <div class="step"            id="step3">3</div>
+    </div>
+
+    <div class="form-card">
+
+      <div class="field-group">
+        <label class="bad-label label-1">exemplo@dominio.com</label>
+        <input type="text" id="email" class="field" />
+      </div>
+
+      <div class="field-group">
+        <label class="bad-label label-2">Estado Civil</label>
+        <input type="text" id="estadoCivil" class="field" placeholder="estado civil" />
+      </div>
+
+      <div class="field-group">
+        <label class="bad-label label-3">Nacionalidade</label>
+        <input type="text" id="nacionalidade" class="field" />
+      </div>
+
+      <div class="field-group">
+        <label class="bad-label label-4">Sua Profissão</label>
+        <input type="text" id="profissao" class="field" placeholder="cargo" />
+      </div>
+
+      <div class="field-group">
+        <label class="bad-label label-5">Data de Nascimento</label>
+        <input type="text" id="dataNascimento" class="field" placeholder="MM/DD/AAAA" inputmode="numeric" />
+      </div>
+
+      <div class="field-group">
+        <label class="bad-label label-1">000.000.000-00</label>
+        <input type="text" id="cpf" class="field" placeholder="cpf" inputmode="numeric"/>
+      </div>
+
+      <div class="field-group">
+        <label class="bad-label label-2">Sexo</label>
+        <input type="text" id="sexo" class="field" />
+      </div>
+
+      <div class="field-group">
+        <label class="bad-label label-3">Altura</label>
+        <input type="text" id="escolaridade" class="field" placeholder="cm" inputmode="numeric" maxlength="3"/>
+      </div>
+
+    </div>
+
+    <div id="errorMessage" class="error-msg"></div>
+
+    <div class="btn-area">
+      <button class="btn-voltar" id="btnVoltar" onclick="window.location.href='step1.html'">Voltar</button>
+      <button class="btn-continuar" id="btnContinuar">Continuar</button>
+    </div>
+
+  </div>
+
+  <div id="popupContainer">
+    <div id="popupFugitivo" class="popup-box box-main">
+      <button class="popup-close" id="closeFugitivo">X</button>
+      <div class="popup-image-placeholder"></div>
+    </div>
+  </div>
+
+  <script src="js/script_step2.js"></script>
+</body>
+</html>

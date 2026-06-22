@@ -1,0 +1,342 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Michroma';
+}
+ 
+body {
+  background-color: #0a0a0a;
+  font-family: 'Michroma', Arial, sans-serif;
+  min-height: 100vh;
+}
+ 
+/* Fundo com glow verde radial original */
+.page {
+  min-height: 100vh;
+  background: radial-gradient(ellipse 60% 60% at 20% 60%, rgba(0, 180, 0, 0.25) 0%, transparent 70%),
+              #0a0a0a;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32px 24px 40px;
+}
+ 
+.logo-area {
+  margin-bottom: 32px;
+}
+ 
+.logo {
+  height: 90px;
+  object-fit: contain;
+}
+ 
+.area-central {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  gap: 32px;
+  width: 100%;
+  max-width: 960px;
+  flex: 1;
+}
+ 
+.koda-area {
+  flex-shrink: 0;
+  position: relative;
+}
+ 
+.koda-area::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 130%;
+  height: 100%;
+  background: linear-gradient(to bottom, rgba(0, 210, 0, 0.4) 0%, transparent 100%);
+  border-radius: 50%;
+  filter: blur(28px);
+  z-index: 0;
+}
+
+.koda {
+  height: 420px;
+  object-fit: contain;
+  display: block;
+  position: relative;
+  z-index: 1;
+}
+ 
+.info-card {
+  background-color: #37FA4F;
+  padding: 36px 40px;
+  flex: 1;
+  min-height: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+ 
+.card-text-black {
+  color: #111;
+  font-size: 1.4rem;
+  font-weight: 500;
+  line-height: 1.4;
+  display: inline;
+}
+ 
+.card-title-cyan {
+  color: #01EBFA;
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1.3;
+  display: inline;
+}
+ 
+.inline {
+  display: inline;
+  font-size: 1.4rem;
+}
+ 
+.feature-list {
+  list-style: none;
+  margin-top: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+ 
+.feature-list li {
+  color: #2EDA44;
+  font-size: 1.3rem;
+  font-weight: 500;
+}
+
+.btn-area {
+  margin-top: 40px;
+  width: 100%;
+  max-width: 960px;
+  display: flex;
+  justify-content: space-between;
+  padding: 0;
+}
+ 
+.btn-voltar {
+  visibility: hidden; 
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  padding: 14px 56px;
+  font-family: 'Michroma', Arial, sans-serif;
+}
+
+.btn-continuar {
+  background-color: #CDCDCD;
+  color: #FFFFFF;
+  font-size: 1.1rem;
+  border: none;
+  border-radius: 8px;
+  padding: 14px 56px;
+  cursor: pointer;
+  font-family: 'Michroma', Arial, sans-serif;
+}
+
+/* ── MODAL OVERLAY (NÃO ALTERA O DESIGN ORIGINAL DE FUNDO) ── */
+.captcha-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.82); /* Backdrop temporário escuro */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.captcha-window {
+  background: #fff;
+  padding: 8px;
+  border: 1px solid #ccc;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+  width: 318px;
+  position: relative; /* Base para o botão X absoluto */
+}
+
+/* O Botão X Secreto (Altamente apagado e discreto) */
+.btn-x-falso {
+  position: absolute;
+  top: 4px;
+  right: 6px;
+  background: transparent;
+  border: none;
+  color: #eaeaea; /* Mistura quase que completamente com o fundo cinza claro */
+  font-size: 11px; 
+  cursor: pointer;
+  z-index: 10005;
+  font-family: Arial, sans-serif;
+  transition: color 0.2s;
+}
+.btn-x-falso:hover {
+  color: #cccccc; /* Continua quase imperceptível ao passar o mouse */
+}
+
+.challenge-box {
+  width: 300px;
+  background: #fff;
+}
+
+.challenge-header {
+  background: #4a90e2;
+  color: #fff;
+  padding: 16px;
+}
+
+.challenge-instruction {
+  font-family: Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.3;
+}
+
+.challenge-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+  padding: 4px 0;
+}
+
+.grid-item {
+  aspect-ratio: 1;
+  overflow: hidden;
+  cursor: pointer;
+  border: 2px solid transparent;
+}
+
+.grid-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.grid-item.selected {
+  border: 2px solid #4a90e2;
+}
+
+.grid-item.selected img {
+  transform: scale(0.88);
+  opacity: 0.7;
+}
+
+.challenge-footer {
+  display: flex;
+  justify-content: center; /* Garante a centralização perfeita requisitada */
+  padding: 10px 0 4px;
+  border-top: 1px solid #dfdfdf;
+}
+
+.btn-verify {
+  background: #4a90e2;
+  color: #fff;
+  border: none;
+  padding: 11px 32px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  font-family: Arial, sans-serif;
+  border-radius: 2px;
+}
+
+.btn-verify:hover {
+  background-color: #357ae8;
+}
+
+/* Caixa do reCAPTCHA Final */
+.recaptcha-box {
+  background: #f9f9f9;
+  border: 1px solid #d3d3d3;
+  height: 74px;
+  width: 300px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 12px;
+  font-family: Arial, sans-serif;
+}
+
+.checkbox-container {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+}
+
+.checkbox-container input {
+  position: absolute;
+  opacity: 0;
+}
+
+.custom-checkbox {
+  width: 24px;
+  height: 24px;
+  background: #fff;
+  border: 2px solid #c1c1c1;
+  border-radius: 2px;
+  margin-right: 12px;
+  position: relative;
+}
+
+.checkbox-container input:checked ~ .custom-checkbox::after {
+  content: "";
+  position: absolute;
+  left: 8px;
+  top: 2px;
+  width: 5px;
+  height: 12px;
+  border: solid #4a90e2;
+  border-width: 0 3px 3px 0;
+  transform: rotate(45deg);
+}
+
+.checkbox-text {
+  font-size: 14px;
+  color: #222;
+}
+
+.recaptcha-logo-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.recaptcha-logo-area img { width: 32px; height: 32px; }
+.recaptcha-logo-area span { font-size: 8px; color: #555; font-weight: bold; margin-top: 2px; }
+.privacy-links { font-size: 7px; color: #555; }
+
+/* Mensagem de Erro Destacada */
+.error-container {
+  background: rgba(255, 51, 51, 0.15);
+  border: 2px dashed #ff3333;
+  padding: 20px;
+  text-align: center;
+  max-width: 960px;
+  width: 100%;
+  margin-bottom: 24px;
+  box-shadow: 0 0 15px rgba(255, 51, 51, 0.2);
+}
+
+.error-main {
+  color: #ff3333;
+  font-size: 1.1rem;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.error-sub {
+  color: #bbb;
+  font-size: 0.9rem;
+  margin-top: 6px;
+}

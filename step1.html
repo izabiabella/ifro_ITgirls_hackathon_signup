@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Inscrição ADS - Etapa 1</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Michroma&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/estilo_step1.css" />
+</head>
+<body>
+
+  <!-- Pop-up: escolher segundo nome -->
+  <div id="overlaySegundoNome" class="overlay hidden">
+    <div class="popup-segundo-nome">
+      <p>Que pena! Mas não se preocupe.<br>Escolha um segundo nome para você:</p>
+      <input type="text" id="novoSegundoNome" class="field popup-input" />
+      <button id="btnConfirmarSegundoNome" class="btn-popup-confirmar">Confirmar</button>
+    </div>
+  </div>
+
+  <!-- Pop-up: informações extras (cor do cabelo + tecnologias) -->
+  <div id="overlayExtras" class="overlay hidden">
+    <div class="popup-extras">
+
+      <label class="extras-label">Cor do cabelo</label>
+      <input type="text" id="corCabelo" class="field popup-input" placeholder="Ex: castanho, preto, loiro..." />
+
+      <label class="extras-label">Quais tecnologias já usou</label>
+      <div class="tech-grid">
+        <label class="tech-option"><input type="checkbox" value="Python" /> Python</label>
+        <label class="tech-option"><input type="checkbox" value="JavaScript" /> JavaScript</label>
+        <label class="tech-option"><input type="checkbox" value="SQL" /> SQL</label>
+        <label class="tech-option"><input type="checkbox" value="Java" /> Java</label>
+        <label class="tech-option"><input type="checkbox" value="C" /> C</label>
+        <label class="tech-option"><input type="checkbox" value="C++" /> C++</label>
+        <label class="tech-option"><input type="checkbox" value="TypeScript" /> TypeScript</label>
+        <label class="tech-option"><input type="checkbox" value="PHP" /> PHP</label>
+        <label class="tech-option"><input type="checkbox" value="Kotlin" /> Kotlin</label>
+        <label class="tech-option"><input type="checkbox" value="Swift" /> Swift</label>
+        <label class="tech-option"><input type="checkbox" value="Ruby" /> Ruby</label>
+        <label class="tech-option"><input type="checkbox" value="Go" /> Go</label>
+        <label class="tech-option"><input type="checkbox" value="Rust" /> Rust</label>
+        <label class="tech-option"><input type="checkbox" value="Nenhuma" /> Nenhuma</label>
+      </div>
+      <p id="extrasErro" class="extras-erro hidden">⚠️ Preencha a cor do cabelo e selecione ao menos uma tecnologia.</p>
+      <button id="btnConfirmarExtras" class="btn-popup-confirmar">continuar</button>
+    </div>
+  </div>
+
+  <!-- Pop-up: comover o usuário a dar 4 estrelas -->
+  <div id="overlayEstrelas" class="overlay hidden">
+    <div class="popup-estrelas">
+      <div id="estrelasEmoji" class="estrelas-emoji">😢</div>
+      <p id="estrelasTexto" class="estrelas-texto"></p>
+      <button id="btnDar4Estrelas" class="btn-popup-confirmar">Tá bom!</button>
+      <button id="btnRecusar" class="btn-popup-recusar">Não</button>
+    </div>
+  </div>
+
+  <div class="page">
+
+    <div class="logo-area">
+      <img src="imagens/ifrologo.jpeg" alt="IFRO Campus Ariquemes" class="logo" />
+    </div>
+
+    <div class="stepper" id="stepper">
+      <div class="step active" id="step1">1</div>
+      <div class="step-line" id="line1"></div>
+      <div class="step" id="step2">2</div>
+      <div class="step-line" id="line2"></div>
+      <div class="step" id="step3">3</div>
+    </div>
+
+    <div class="form-card">
+
+      <input type="text" id="primeiroNome" class="field" placeholder="Primeiro Nome" />
+
+      <input type="text" id="segundoNome" class="field" placeholder="Segundo Nome" />
+      <label class="checkbox-label">
+        <input type="checkbox" id="semSegundoNome" /> Sem Segundo Nome
+      </label>
+
+      <input type="text" id="sobrenome" class="field" placeholder="Sobrenome" />
+
+      <div class="phone-row">
+        <span class="phone-plus">+</span>
+        <input type="text" id="phoneDdi"    class="field phone-ddi"    maxlength="2" placeholder="DD" />
+        <span class="phone-paren">(</span>
+        <input type="text" id="phoneDdd"    class="field phone-ddd"    maxlength="2" placeholder="DDD" />
+        <span class="phone-paren">)</span>
+        <input type="text" id="phonePrefix" class="field phone-prefix" maxlength="1" placeholder="9" />
+        <input type="text" id="phoneNumber" class="field phone-number" maxlength="8" placeholder="00000000" />
+      </div>
+
+      <input type="text" id="endereco" class="field" placeholder="Rua, bairro, número" />
+
+      <div class="city-state-row">
+        <input type="text" id="cidade" class="field city" placeholder="Cidade" />
+        <input type="text" id="estado" class="field state" placeholder="Estado" />
+      </div>
+
+      <input type="text" id="tipoSanguineo" class="field" placeholder="Tipo sanguíneo" />
+
+      <div class="rating-area">
+        <p class="rating-label">Avalie nosso formulário!</p>
+        <div class="stars" id="starsContainer">
+          <span class="star" data-value="1">★</span>
+          <span class="star" data-value="2">★</span>
+          <span class="star" data-value="3">★</span>
+          <span class="star active" data-value="4">★</span>
+        </div>
+      </div>
+
+    </div>
+
+    <div id="errorMessage" class="error-msg"></div>
+
+    <div class="btn-area">
+      <button class="btn-voltar" id="btnVoltar" onclick="window.location.href='index.html'">Voltar</button>
+      <button class="btn-continuar" id="btnContinuar">Continuar</button>
+    </div>
+
+  </div>
+
+  <script src="js/script_step1.js"></script>
+</body>
+</html>

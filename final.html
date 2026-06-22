@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Está inscrito! — IFRO Campus Ariquemes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/estilo_index_final.css" />
+</head>
+<body>
+
+  <svg class="fake-cursor" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M3 2L21 12L13 13.5L9.5 21L3 2Z" fill="#39ff84" stroke="#04140b" stroke-width="1"/>
+  </svg>
+
+  <div class="confetti-layer" id="confettiLayer"></div>
+  <div class="toast-stack" id="toastStack"></div>
+
+  <div class="page">
+
+    <div class="logo-area">
+      <img src="imagens/ifrologo.jpeg" alt="IFRO Campus Ariquemes" class="logo" />
+    </div>
+
+    <main class="card">
+
+      <div id="chaos">
+        <div class="glow-line">Muito bem, {Primeiro Nome}!</div>
+
+        <p class="event-details">
+          Será que você já está inscrito? 🤔
+        </p>
+
+        <p class="redirect" id="redirectText">redirecionando para o site oficial em <b id="count">5</b>...</p>
+
+        <div class="actions">
+          <button class="close-btn" id="closeBtn">FECHAR</button>
+        </div>
+      </div>
+
+      <div class="calm" id="calmState">
+        <div class="glow-line">Agora sim! 💚💻</div>
+        <p>Obrigado por testar a pior UX do IFRO Ariquemes.</p>
+      </div>
+
+    </main>
+
+    <p class="footer" id="realExit">FECHAR</p>
+
+  </div>
+
+  <script src="js/script_index_final.js"></script>
+
+</body>
+</html>

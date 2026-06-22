@@ -1,0 +1,279 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background-color: #0a0a0a;
+  font-family: 'Michroma', Arial, sans-serif;
+  min-height: 100vh;
+}
+
+.page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 28px 24px 40px;
+  gap: 24px;
+}
+
+/* ── Logo ── */
+.logo-area { background: #0a0a0a; border-radius: 12px; padding: 8px 24px; }
+.logo { height: 80px; object-fit: contain; display: block; }
+
+/* ── Stepper ── */
+.stepper { display: flex; align-items: center; width: 100%; max-width: 600px; }
+
+.step {
+  width: 44px; height: 44px; border-radius: 50%;
+  background: #888; color: #ccc; font-size: 1.1rem;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  transition: background 0.4s, color 0.4s;
+}
+.step.active   { background: #37FA4F; color: #fff; }
+.step.done     { background: #37FA4F; color: #fff; }
+
+.step-line {
+  flex: 1; height: 2px; background: #888;
+  transition: background 0.4s;
+}
+.step-line.done { background: #37FA4F; }
+
+/* ── Card ── */
+.form-card {
+  width: 100%; max-width: 780px;
+  background: linear-gradient(to bottom, #37FA4F 0%, #01ECFA 100%);
+  padding: 36px 48px 40px;
+  display: flex; flex-direction: column; gap: 16px;
+}
+
+/* ── Campos ── */
+.field {
+  width: 100%;
+  background: rgba(200, 255, 220, 0.55);
+  border: 1.5px solid #c0392b;
+  padding: 14px 18px;
+  font-family: 'Michroma', Arial, sans-serif;
+  font-size: 1rem; color: #c0392b; outline: none;
+}
+.field::placeholder { color: #e1bdba; opacity: 1; }
+
+.field-ok  { border-color: #1a8a1a !important; color: #1a5c23 !important; background: rgba(180,255,200,0.7) !important; }
+.field-err { border-color: #c0392b !important; color: #c0392b !important; }
+
+/* ── Checkbox ── */
+.checkbox-label {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 0.75rem; color: #333;
+  margin-top: -8px; margin-left: 20px;
+}
+
+/* ── Telefone ── */
+.phone-row { display: flex; align-items: center; gap: 6px; }
+.phone-plus { font-size: 1.3rem; color: #c0392b; font-weight: bold; flex-shrink: 0; }
+.phone-paren { font-size: 1.2rem; color: #333; flex-shrink: 0; }
+.phone-ddi { width: 70px; flex-shrink: 0; }
+.phone-ddd { width: 60px; flex-shrink: 0; }
+.phone-prefix { width: 70px; flex-shrink: 0; }
+.phone-number { width: 70px; flex-shrink: 0; }
+
+/* ── Cidade + Estado ── */
+.city-state-row { display: flex; gap: 16px; }
+.city { flex: 2; } .state { flex: 1; }
+
+/* ── Estrelas ── */
+.rating-area { display: flex; flex-direction: column; align-items: flex-end; margin-top: 8px; gap: 4px; }
+.rating-label { font-size: 0.9rem; color: #68e276; font-weight: 600; }
+.stars { display: flex; gap: 4px; font-size: 2rem; }
+.star { color: #e67e22; opacity: 0.3; cursor: pointer; transition: opacity 0.2s, transform 0.1s; }
+.star.active { opacity: 1; }
+
+/* ── Botões ── */
+.btn-area { width: 100%; max-width: 780px; display: flex; justify-content: space-between; }
+
+.btn-voltar {
+  background-color: #cdcdcd; color: #fff;
+  font-family: 'Michroma', Arial, sans-serif; font-size: 1.05rem;
+  border: none; border-radius: 30px; padding: 14px 56px; cursor: pointer;
+}
+.btn-continuar {
+  background-color: #222; color: #000;
+  font-family: 'Michroma', Arial, sans-serif; font-size: 1rem;
+  border: none; border-radius: 30px; padding: 14px 56px; cursor: pointer;
+}
+
+/* ── Erro ── */
+.error-msg {
+  width: 100%; max-width: 780px; font-family: 'Michroma', Arial, sans-serif;
+  font-size: 0.85rem; text-align: center; min-height: 20px;
+  margin-top: -8px; margin-bottom: -8px;
+  font-weight: bold; text-transform: uppercase; letter-spacing: 1px;
+}
+
+/* ── Overlays genéricos ── */
+.overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.80);
+  z-index: 9000; display: flex; align-items: center; justify-content: center;
+}
+.overlay.hidden { display: none; }
+
+/* ── Pop-up: Segundo Nome ── */
+.popup-segundo-nome {
+  background: linear-gradient(to bottom, #37FA4F, #01ECFA);
+  border-radius: 16px; padding: 36px 40px;
+  max-width: 420px; width: 90%;
+  display: flex; flex-direction: column; gap: 16px;
+  text-align: center; font-family: 'Michroma', Arial, sans-serif;
+  color: #111; font-size: 0.95rem;
+}
+.popup-input { background: rgba(200,255,220,0.7) !important; border-radius: 0; }
+.btn-popup-confirmar {
+  background: #111; color: #37FA4F;
+  font-family: 'Michroma', Arial, sans-serif; font-size: 1rem;
+  border: none; border-radius: 30px; padding: 12px 40px;
+  cursor: pointer; align-self: center;
+}
+
+/* ── Pop-up: Bitcoin Quiz ── */
+.popup-bitcoin {
+  background: #111; border: 2px solid #37FA4F;
+  border-radius: 16px; padding: 28px 32px;
+  max-width: 500px; width: 95%;
+  display: flex; flex-direction: column; gap: 16px;
+  font-family: 'Michroma', Arial, sans-serif; color: #37FA4F;
+}
+.bitcoin-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
+}
+.bitcoin-item {
+  background: #1a1a1a; border: 2px solid #333;
+  border-radius: 8px; padding: 10px 6px;
+  display: flex; flex-direction: column;
+  align-items: center; gap: 6px; cursor: pointer;
+  transition: border-color 0.2s, transform 0.1s;
+}
+.bitcoin-item:hover { border-color: #37FA4F; transform: scale(1.04); }
+.bitcoin-item img { width: 52px; height: 52px; object-fit: contain; }
+.bitcoin-item span { font-size: 0.65rem; color: #aaa; }
+.bitcoin-erro { color: #ff3333; font-size: 0.8rem; font-weight: bold; }
+.bitcoin-erro.hidden { display: none; }
+
+/* ── Pop-up: Estrelas (comover) ── */
+.popup-estrelas {
+  background: linear-gradient(135deg, #0a0a0a, #1a1a1a);
+  border: 2px solid #e67e22;
+  border-radius: 16px; padding: 36px 40px;
+  max-width: 440px; width: 92%;
+  display: flex; flex-direction: column;
+  align-items: center; gap: 18px;
+  font-family: 'Michroma', Arial, sans-serif;
+}
+.estrelas-emoji { font-size: 3.5rem; }
+.estrelas-texto { color: #eee; font-size: 0.88rem; line-height: 1.6; }
+.btn-popup-recusar {
+  background: transparent; color: #666;
+  font-family: 'Michroma', Arial, sans-serif; font-size: 0.75rem;
+  border: none; cursor: pointer; text-decoration: underline;
+}
+
+/* ── Pop-up: Informações Extras ── */
+.popup-extras {
+  background: linear-gradient(to bottom, #37FA4F, #01ECFA);
+  border-radius: 16px;
+  padding: 32px 36px;
+  max-width: 520px;
+  width: 95%;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  font-family: 'Michroma', Arial, sans-serif;
+  color: #111;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.popup-extras-titulo {
+  font-size: 1rem;
+  font-weight: bold;
+  text-align: center;
+  color: #0a3d0a;
+  margin-bottom: 4px;
+}
+
+.extras-label {
+  font-size: 0.8rem;
+  font-weight: bold;
+  color: #0a3d0a;
+  margin-top: 4px;
+}
+
+.tech-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.tech-option {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(0,0,0,0.1);
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 0.78rem;
+  cursor: pointer;
+  color: #0a3d0a;
+  transition: background 0.15s;
+}
+
+.tech-option:hover { background: rgba(0,0,0,0.18); }
+
+.tech-option input[type="checkbox"] {
+  accent-color: #0a3d0a;
+  width: 14px; height: 14px;
+  cursor: pointer;
+}
+
+.extras-erro {
+  color: #c0392b;
+  font-size: 0.78rem;
+  font-weight: bold;
+  text-align: center;
+}
+.extras-erro.hidden { display: none; }
+
+/* ── Pop-up: Informações Extras ── */
+.popup-extras {
+  background: linear-gradient(to bottom, #37FA4F, #01ECFA);
+  border-radius: 16px;
+  padding: 32px 36px;
+  max-width: 520px;
+  width: 95%;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  font-family: 'Michroma', Arial, sans-serif;
+  color: #111;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+.popup-extras-titulo {
+  font-size: 1rem; font-weight: bold;
+  text-align: center; color: #0a3d0a; margin-bottom: 4px;
+}
+.extras-label {
+  font-size: 0.8rem; font-weight: bold; color: #0a3d0a; margin-top: 4px;
+}
+.tech-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
+}
+.tech-option {
+  display: flex; align-items: center; gap: 6px;
+  background: rgba(0,0,0,0.1); border-radius: 6px;
+  padding: 6px 10px; font-size: 0.78rem; cursor: pointer;
+  color: #0a3d0a; transition: background 0.15s;
+}
+.tech-option:hover { background: rgba(0,0,0,0.18); }
+.tech-option input[type="checkbox"] {
+  accent-color: #0a3d0a; width: 14px; height: 14px; cursor: pointer;
+}
+.extras-erro { color: #c0392b; font-size: 0.78rem; font-weight: bold; text-align: center; }
+.extras-erro.hidden { display: none; }

@@ -1,0 +1,312 @@
+// ===========================================================
+// BOSS FIGHT: derrote o Smurf Ladrão e recupere o botão
+// ===========================================================
+// Controles:
+//   seta esquerda/direita : trocar de raia / coletar bitcoin
+//   seta pra cima / espaço : saltar a barreira
+// Colete 5 bitcoins → poder matrix sobe até o smurf →
+// explosão → botão Encerrar fica clicável.
+// ===========================================================
+
+const RAIAS                    = ["lane-esquerda", "lane-centro", "lane-direita"];
+const HP_JOGADOR_MAX           = 3;
+const HP_BOSS_MAX              = 100;
+const BITCOINS_NECESSARIOS     = 5;
+const DURACAO_INVULNERABILIDADE_MS = 900;
+
+// ── DOM ──────────────────────────────────────────────────────
+const jogador           = document.getElementById("jogador");
+const smurf             = document.getElementById("smurf");
+const bossInfo          = document.getElementById("boss-info");
+const botaoNaMao        = document.getElementById("botao-na-mao");
+const containerObs      = document.getElementById("obstaculos");
+const containerBitcoins = document.getElementById("bitcoins");
+const barraVidaBossEl   = document.getElementById("barra-vida-boss-interna");
+const vidaJogadorEl     = document.getElementById("vida-jogador");
+const placarEl          = document.getElementById("placar");
+const mensagemEl        = document.getElementById("mensagem");
+const poderGif          = document.getElementById("poder-gif");
+const explosaoGif       = document.getElementById("explosao-gif");
+const musicaEl          = document.getElementById("musica-fundo");
+
+// ── ESTADO ───────────────────────────────────────────────────
+let raiaJogador    = 1;
+let raiaSmurf      = 1;
+let hpJogador      = HP_JOGADOR_MAX;
+let hpBoss         = HP_BOSS_MAX;
+let moedasColetadas = 0;
+let pulando        = false;
+let invulneravel   = false;
+let capturando     = false;
+let ativo          = true;
+let musicaIniciada = false;
+
+let timeoutObstaculo = null;
+let timeoutBitcoin   = null;
+let timeoutSmurf     = null;
+let raiaSmurfCongelada = 1; // raia em que o smurf ficará parado ao ser atingido
+
+// ── MÚSICA — persiste entre reloads via localStorage ─────────
+function iniciarMusica() {
+  if (musicaIniciada) return;
+  musicaIniciada = true;
+  musicaEl.volume = 0.55;
+
+  // Retoma do ponto onde parou antes do reload
+  const tempoSalvo = parseFloat(localStorage.getItem("musica_tempo") || "0");
+  if (tempoSalvo > 0) musicaEl.currentTime = tempoSalvo;
+
+  musicaEl.play().catch(() => {});
+}
+
+// Salva a posição da música a cada segundo
+setInterval(() => {
+  if (!musicaEl.paused) {
+    localStorage.setItem("musica_tempo", musicaEl.currentTime);
+  }
+}, 1000);
+
+// Salva também quando a página fechar/recarregar
+window.addEventListener("beforeunload", () => {
+  localStorage.setItem("musica_tempo", musicaEl.currentTime);
+});
+
+// Quando o áudio chega ao fim e reinicia (loop), zera o salvo
+musicaEl.addEventListener("seeked", () => {
+  if (musicaEl.currentTime < 1) localStorage.removeItem("musica_tempo");
+});
+
+window.addEventListener("load", () => {
+  musicaEl.play().then(() => { musicaIniciada = true; }).catch(() => {});
+});
+
+document.addEventListener("keydown", iniciarMusica, { once: true });
+document.addEventListener("click",   iniciarMusica, { once: true });
+
+// ── UTILITÁRIOS ──────────────────────────────────────────────
+function aplicarRaia(elemento, indice) {
+  RAIAS.forEach(c => elemento.classList.remove(c));
+  elemento.classList.add(RAIAS[indice]);
+}
+
+function moverJogador(delta) {
+  if (!ativo) return;
+  const nova = raiaJogador + delta;
+  if (nova < 0 || nova > 2) return;
+  raiaJogador = nova;
+  aplicarRaia(jogador, raiaJogador);
+}
+
+function pular() {
+  if (!ativo || pulando) return;
+  pulando = true;
+  jogador.classList.add("pulando");
+  setTimeout(() => { jogador.classList.remove("pulando"); pulando = false; }, 480);
+}
+
+function atualizarHud() {
+  vidaJogadorEl.textContent = "❤️".repeat(hpJogador) + "🖤".repeat(HP_JOGADOR_MAX - hpJogador);
+  placarEl.textContent = `🪙 Bitcoins: ${moedasColetadas}/${BITCOINS_NECESSARIOS}`;
+  barraVidaBossEl.style.width = `${Math.max(hpBoss, 0)}%`;
+}
+
+function mostrarMensagem(html, duracaoMs) {
+  mensagemEl.innerHTML = html;
+  mensagemEl.style.display = "block";
+  if (duracaoMs) {
+    setTimeout(() => { if (mensagemEl.innerHTML === html) mensagemEl.style.display = "none"; }, duracaoMs);
+  }
+}
+
+// ── DIFICULDADE ──────────────────────────────────────────────
+function progresso() {
+  return Math.min(moedasColetadas / BITCOINS_NECESSARIOS, 1);
+}
+function duracaoObstaculo() {
+  return Math.max(2.6 - progresso() * 1.0, 1.4);
+}
+
+// ── DANO AO JOGADOR ──────────────────────────────────────────
+function sofrerDano() {
+  if (invulneravel || capturando || !ativo) return;
+  hpJogador--;
+  atualizarHud();
+  if (hpJogador <= 0) { fimDeJogo(); return; }
+  invulneravel = true;
+  jogador.classList.add("invulneravel");
+  mostrarMensagem("Ai! 💥", 500);
+  setTimeout(() => { invulneravel = false; jogador.classList.remove("invulneravel"); }, DURACAO_INVULNERABILIDADE_MS);
+}
+
+function fimDeJogo() {
+  ativo = false;
+  clearTimeout(timeoutObstaculo);
+  clearTimeout(timeoutBitcoin);
+  containerObs.innerHTML = "";
+  containerBitcoins.innerHTML = "";
+  mostrarMensagem(
+    "GAME OVER<br>O Smurf Ladrão venceu... 😈" +
+    '<br><span class="botao-reiniciar" onclick="location.reload()">Tentar de novo</span>'
+  );
+}
+
+// ── OBSTÁCULOS ───────────────────────────────────────────────
+function criarObstaculo() {
+  if (!ativo || capturando) return;
+  const raia = Math.floor(Math.random() * 3);
+  const el   = document.createElement("div");
+  el.classList.add("obstaculo", RAIAS[raia]);
+  el.style.animationDuration = `${duracaoObstaculo()}s`;
+  const img  = document.createElement("img");
+  img.src    = "assets/obstaculo.png";
+  img.alt    = "Barreira";
+  img.style.cssText = "width:100%;display:block;mix-blend-mode:lighten";
+  el.appendChild(img);
+  containerObs.appendChild(el);
+  el.addEventListener("animationend", () => {
+    if ((raia === raiaJogador) && !pulando) sofrerDano();
+    el.remove();
+  });
+}
+
+function agendarProximoObstaculo() {
+  if (!ativo || capturando) return;
+  criarObstaculo();
+  const intervalo = Math.max(1500 - progresso() * 700, 800);
+  timeoutObstaculo = setTimeout(agendarProximoObstaculo, intervalo);
+}
+
+// ── BITCOINS ─────────────────────────────────────────────────
+function criarBitcoin() {
+  if (!ativo || capturando) return;
+  const raia = Math.floor(Math.random() * 3);
+  const el   = document.createElement("div");
+  el.classList.add("bitcoin", RAIAS[raia]);
+  el.style.animationDuration = "1.9s";
+  const img  = document.createElement("img");
+  img.src    = "assets/Bitcoin.png";
+  img.alt    = "Bitcoin";
+  el.appendChild(img);
+  containerBitcoins.appendChild(el);
+  el.addEventListener("animationend", () => {
+    if (raia === raiaJogador) {
+      moedasColetadas = Math.min(moedasColetadas + 1, BITCOINS_NECESSARIOS);
+      atualizarHud();
+      mostrarMensagem(`🪙 +1 Bitcoin! (${moedasColetadas}/${BITCOINS_NECESSARIOS})`, 500);
+      if (moedasColetadas >= BITCOINS_NECESSARIOS) lancarPoder();
+    }
+    el.remove();
+  });
+}
+
+function agendarProximoBitcoin() {
+  if (!ativo || capturando) return;
+  criarBitcoin();
+  const intervalo = 1900 + Math.random() * 600;
+  timeoutBitcoin = setTimeout(agendarProximoBitcoin, intervalo);
+}
+
+// ── PODER (matrix sobe → explosão no smurf) ──────────────────
+function lancarPoder() {
+  capturando = true;
+  clearTimeout(timeoutObstaculo);
+  clearTimeout(timeoutBitcoin);
+  clearTimeout(timeoutSmurf);        // para o smurf de andar AGORA
+  containerObs.innerHTML = "";
+  containerBitcoins.innerHTML = "";
+
+  // Congela o smurf na raia onde ele está neste exato momento
+  raiaSmurfCongelada = raiaSmurf;
+  aplicarRaia(smurf, raiaSmurfCongelada);
+  aplicarRaia(bossInfo, raiaSmurfCongelada);
+
+  hpBoss = 0;
+  atualizarHud();
+  mostrarMensagem("⚡ PODER DOS BITCOINS! ⚡", 1000);
+
+  // O poder sobe da raia do Koda → mas o smurf pode estar em raia diferente.
+  // Para o poder "apontar" para o smurf, colocamos ele na raia do smurf congelado.
+  poderGif.classList.remove("oculto", "subindo");
+  aplicarRaia(poderGif, raiaSmurfCongelada);
+
+  void poderGif.offsetWidth;
+  poderGif.classList.add("subindo");
+
+  poderGif.addEventListener("animationend", () => {
+    poderGif.classList.add("oculto");
+    mostrarExplosao();
+  }, { once: true });
+}
+
+function mostrarExplosao() {
+  explosaoGif.classList.remove("oculto", "explodindo");
+  aplicarRaia(explosaoGif, raiaSmurfCongelada);
+
+  // Posiciona a explosão exatamente sobre o smurf usando sua posição real na tela
+  const smurfRect  = smurf.getBoundingClientRect();
+  const zonaRect   = document.getElementById("zona-jogo").getBoundingClientRect();
+  // Centro vertical do smurf relativo à zona de jogo
+  const topRelativo = smurfRect.top - zonaRect.top + smurfRect.height / 2;
+  explosaoGif.style.top  = `${topRelativo}px`;
+  explosaoGif.style.transform = "translate(-50%, -50%)"; // centraliza no ponto
+
+  const src = explosaoGif.src;
+  explosaoGif.src = "";
+  explosaoGif.src = src;
+
+  void explosaoGif.offsetWidth;
+  explosaoGif.classList.add("explodindo");
+
+  // Smurf permanece visível — a explosão aparece em cima dele
+  explosaoGif.addEventListener("animationend", () => {
+    explosaoGif.classList.add("oculto");
+    iniciarCaptura();
+  }, { once: true });
+}
+
+// ── SMURF PROVOCA ────────────────────────────────────────────
+function provocarComSmurf() {
+  if (!ativo || capturando) return;
+  raiaSmurf = Math.floor(Math.random() * 3);
+  aplicarRaia(smurf, raiaSmurf);
+  aplicarRaia(bossInfo, raiaSmurf);
+  timeoutSmurf = setTimeout(provocarComSmurf, 1300 + Math.random() * 700);
+}
+
+// ── CAPTURA FINAL ────────────────────────────────────────────
+function iniciarCaptura() {
+  smurf.style.visibility = "visible";
+  aplicarRaia(smurf, raiaJogador);
+  aplicarRaia(bossInfo, raiaJogador);
+  smurf.style.top = "45%";
+  bossInfo.style.top = "30%";
+  smurf.classList.add("alcancavel");
+  mostrarMensagem("O Smurf foi derrotado! Clique em Continuar! 🎉");
+}
+
+botaoNaMao.addEventListener("click", () => {
+  if (!capturando) return;
+  ativo = false;
+  mensagemEl.style.display = "none";
+  alert("Parabéns! Você usou o poder dos Bitcoins, derrotou o Smurf Ladrão e conseguiu Encerrar a experiência. 🎉");
+  window.location.href = "../index_final.html";
+});
+
+// ── CONTROLES ────────────────────────────────────────────────
+document.addEventListener("keydown", (e) => {
+  switch (e.key) {
+    case "ArrowLeft":  moverJogador(-1); break;
+    case "ArrowRight": moverJogador(+1); break;
+    case "ArrowUp":
+    case " ":
+      e.preventDefault();
+      pular();
+      break;
+  }
+});
+
+// ── INÍCIO ───────────────────────────────────────────────────
+atualizarHud();
+agendarProximoObstaculo();
+agendarProximoBitcoin();
+provocarComSmurf();

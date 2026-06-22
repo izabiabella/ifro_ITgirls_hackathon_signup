@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>IFRO ADS Ariquemes</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Michroma&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="css/estilo_index.css" />
+  </head>
+  <body>
+    <div class="page">
+      <div class="logo-area">
+        <img src="imagens/ifrologo.jpeg" alt="IFRO Campus Ariquemes" class="logo" />
+      </div>
+
+      <div id="errorContainer" class="error-container" style="display: none;">
+        <p class="error-main">Tráfego incomum na sua rede de computadores.</p>
+        <p class="error-sub">Não foi possível confirmar que você é humano.</p>
+      </div>
+
+      <div class="area-central">
+        <div class="koda-area">
+          <img src="imagens/ifrokoda.png" alt="Koda" class="koda" />
+        </div>
+
+        <div class="info-card">
+          <p class="card-text-black">Se inscreva no melhor curso de</p>
+          <p class="card-title-cyan">Análise e Desenvolvimento de<br />Sistemas</p>
+          <span class="card-text-black inline"> de Ariquemes</span>
+
+          <ul class="feature-list">
+            <li>100% gratuito</li>
+            <li>Prático</li>
+            <li>Federal</li>
+            <li>Presencial</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="btn-area">
+        <button class="btn-voltar" aria-hidden="true" tabindex="-1">Voltar</button>
+        <button class="btn-continuar" id="btnContinuar" onclick="abrirCaptcha()">Continuar</button>
+      </div>
+    </div>
+
+    <div id="captchaOverlay" class="captcha-overlay" style="display: none;">
+      <div class="captcha-window">
+        
+        <button id="btnXFalso" class="btn-x-falso" onclick="clicouNoX()" style="display: none;">✕</button>
+        
+        <div id="challengeBox" class="challenge-box">
+          <div class="challenge-header">
+            <p class="challenge-instruction">Selecione todas as imagens com <br><strong>Bitcoin</strong></p>
+          </div>
+          
+          <div class="challenge-grid">
+            <div class="grid-item" onclick="toggleSelect(this)"><img src="https://images.unsplash.com/photo-1621761191319-c6fb62004040?q=80&w=150&auto=format&fit=crop"></div>
+            <div class="grid-item" onclick="toggleSelect(this)"><img src="https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?q=80&w=150&auto=format&fit=crop"></div>
+            <div class="grid-item" onclick="toggleSelect(this)"><img src="https://images.unsplash.com/photo-1618042164219-62c820f10723?q=80&w=150&auto=format&fit=crop"></div>
+            <div class="grid-item" onclick="toggleSelect(this)"><img src="https://images.unsplash.com/photo-1642104704074-907c0698cbd9?q=80&w=150&auto=format&fit=crop"></div>
+            <div class="grid-item" onclick="toggleSelect(this)"><img src="https://images.unsplash.com/photo-1516245834210-c4c142787335?q=80&w=150&auto=format&fit=crop"></div>
+            <div class="grid-item" onclick="toggleSelect(this)"><img src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=150&auto=format&fit=crop"></div>
+            <div class="grid-item" onclick="toggleSelect(this)"><img src="https://images.unsplash.com/photo-1621761191319-c6fb62004040?q=80&w=150&auto=format&fit=crop"></div>
+            <div class="grid-item" onclick="toggleSelect(this)"><img src="https://images.unsplash.com/photo-1622790698141-94e30457ef12?q=80&w=150&auto=format&fit=crop"></div>
+            <div class="grid-item" onclick="toggleSelect(this)"><img src="https://images.unsplash.com/photo-1629339942248-45d4b10c8c2f?q=80&w=150&auto=format&fit=crop"></div>
+          </div>
+
+          <div class="challenge-footer">
+            <button class="btn-verify" id="btnVerify" onclick="exibirCheckboxFinal()">VERIFICAR</button>
+          </div>
+        </div>
+
+        <div id="recaptchaBox" class="recaptcha-box" style="display: none;">
+          <div class="recaptcha-checkbox-area">
+            <label class="checkbox-container">
+              <input type="checkbox" id="robotCheckbox" onchange="clicouNoCheckboxRobo()">
+              <span class="custom-checkbox"></span>
+              <span class="checkbox-text">Eu sou um robô</span>
+            </label>
+          </div>
+          <div class="recaptcha-logo-area">
+            <img src="https://www.gstatic.com/recaptcha/api2/logo_48.png" alt="reCAPTCHA">
+            <span>reCAPTCHA</span>
+            <div class="privacy-links">Privacidade - Termos</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <script>
+      const overlay = document.getElementById('captchaOverlay');
+      const challengeBox = document.getElementById('challengeBox');
+      const recaptchaBox = document.getElementById('recaptchaBox');
+      const robotCheckbox = document.getElementById('robotCheckbox');
+      const btnXFalso = document.getElementById('btnXFalso');
+      const errorContainer = document.getElementById('errorContainer');
+
+      function abrirCaptcha() {
+        // Inicia/Reseta o estado do modal perfeitamente
+        errorContainer.style.display = 'none';
+        recaptchaBox.style.display = 'none';
+        btnXFalso.style.display = 'none';
+        challengeBox.style.display = 'block';
+        robotCheckbox.checked = false; 
+        overlay.style.display = 'flex';
+      }
+
+      function toggleSelect(element) {
+        element.classList.toggle('selected');
+      }
+
+      function exibirCheckboxFinal() {
+        // NÃO navega automaticamente. Apenas troca a interface interna do modal
+        challengeBox.style.display = 'none';
+        
+        // Faz surgir o checkbox desmarcado e o botão X semi-invisível
+        recaptchaBox.style.display = 'flex';
+        btnXFalso.style.display = 'block';
+      }
+
+      function clicouNoCheckboxRobo() {
+        if (robotCheckbox.checked) {
+          // Armadilha ativada: fecha o modal e pune o usuário na tela inicial original
+          setTimeout(() => {
+            overlay.style.display = 'none';
+            errorContainer.style.display = 'block';
+            limparSelecoes();
+          }, 300);
+        }
+      }
+
+      function clicouNoX() {
+        // Única saída válida: remove o overlay sem quebrar o layout e avança de fase
+        overlay.style.display = 'none';
+        window.location.href = 'step1.html';
+      }
+
+      function limparSelecoes() {
+        document.querySelectorAll('.grid-item').forEach(item => item.classList.remove('selected'));
+      }
+    </script>
+  </body>
+</html>

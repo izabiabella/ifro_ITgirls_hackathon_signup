@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Boss Fight: Smurf Ladrão</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="tela2-body">
+
+  <!-- Música de fundo -->
+  <audio id="musica-fundo" src="assets/musica.mp3" loop preload="auto"></audio>
+
+  <div class="palco-corrida">
+
+    <!-- fundo: a ponte sobre o rio -->
+    <div class="fundo-corredor"></div>
+
+    <div class="zona-jogo" id="zona-jogo">
+
+      <!-- o boss: o smurf que roubou o botão -->
+      <div id="boss-info" class="boss-info">
+        <div class="boss-nome">SMURF LADRÃO</div>
+        <div class="barra-vida-boss">
+          <div id="barra-vida-boss-interna" class="barra-vida-boss-interna"></div>
+        </div>
+      </div>
+
+      <div id="smurf" class="smurf-com-botao lane-centro">
+        <div class="tenor-gif-embed"
+             data-postid="6996606692597847094"
+             data-share-method="host"
+             data-aspect-ratio="0.933735"
+             data-width="100%">
+          <a href="https://tenor.com/view/dance-blue-strumf-smurfs-gif-6996606692597847094">Dance Blue GIF</a>
+          from <a href="https://tenor.com/search/dance-gifs">Dance GIFs</a>
+        </div>
+        <div id="botao-na-mao" class="botao-na-mao">Continuar</div>
+      </div>
+
+      <!-- efeito do poder (matrix) — aparece via JS -->
+      <img id="poder-gif" class="poder-gif oculto" src="assets/poder.gif" alt="Poder">
+
+      <!-- explosão no smurf — aparece via JS -->
+      <img id="explosao-gif" class="explosao-gif oculto" src="assets/explosao.gif" alt="Explosão">
+
+      <!-- obstáculos e bitcoins entram aqui via JS -->
+      <div id="obstaculos"></div>
+      <div id="bitcoins"></div>
+
+      <!-- o jogador: o Koda -->
+      <img id="jogador" class="jogador lane-centro" src="assets/koda.webp" alt="Koda correndo">
+    </div>
+
+    <div class="instrucoes">
+      ⬅️ ➡️ : trocar de raia<br>
+      ⬆️ / espaço : saltar barreira<br>
+      🪙 colete 5 bitcoins pra lançar seu poder!
+    </div>
+
+    <div id="vida-jogador" class="vida-jogador">❤️❤️❤️</div>
+    <div id="placar" class="placar">🪙 Bitcoins: 0/5</div>
+    <div id="mensagem" class="mensagem"></div>
+  </div>
+
+  <script type="text/javascript" async src="https://tenor.com/embed.js"></script>
+  <script src="js/jogo.js"></script>
+
+  <!-- Controles touch (visíveis só em mobile via CSS) -->
+  <div class="controles-touch">
+    <div class="grupo-lr">
+      <button id="btn-esq" ontouchstart="moverJogador(-1)">⬅️</button>
+      <button id="btn-dir" ontouchstart="moverJogador(+1)">➡️</button>
+    </div>
+    <button id="btn-pulo" ontouchstart="pular()">⬆️</button>
+  </div></body>
+</html>

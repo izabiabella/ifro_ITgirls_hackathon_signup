@@ -1,0 +1,396 @@
+
+/* =========================================================
+   TELA 2 — mini-jogo de corrida (estilo Subway Surfers)
+   O baianinho corre pelo corredor e precisa pular os
+   obstáculos enquanto persegue o smurf, que fugiu com o
+   botão "Continuar" na mão.
+   ========================================================= */
+.tela2-body {
+  width: 100%;
+  height: 100vh;
+  background: #000;
+  overflow: hidden;
+  position: relative;
+  font-family: Arial, sans-serif;
+}
+
+.palco-corrida {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+/* fundo do cenário (imagem), esticado pra preencher a tela */
+.fundo-corredor {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-image: url("../assets/fundo.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  filter: brightness(0.75);
+}
+
+/* área onde a corrida acontece, com 3 "raias" (esquerda/centro/direita) */
+.zona-jogo {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+}
+
+.lane-esquerda { left: 20% !important; }
+.lane-centro   { left: 50% !important; }
+.lane-direita  { left: 80% !important; }
+
+/* o smurf que roubou o botão, correndo lá na frente */
+.smurf-com-botao {
+  position: absolute;
+  top: 16%;
+  left: 50%;
+  width: 130px;
+  transform: translateX(-50%);
+  transition: left 0.5s ease, top 0.6s ease;
+  z-index: 6;
+  text-align: center;
+}
+
+/* nome do boss + barra de vida, sempre acompanhando a raia do smurf */
+.boss-info {
+  position: absolute;
+  top: 4%;
+  left: 50%;
+  width: 200px;
+  transform: translateX(-50%);
+  transition: left 0.5s ease;
+  z-index: 6;
+  text-align: center;
+}
+
+.boss-nome {
+  color: #fff;
+  font-family: monospace;
+  font-weight: bold;
+  font-size: 0.85rem;
+  letter-spacing: 1px;
+  text-shadow: 0 0 6px #000, 0 0 6px #000;
+  margin-bottom: 4px;
+}
+
+.barra-vida-boss {
+  width: 100%;
+  height: 14px;
+  background: #3a0000;
+  border: 2px solid #fff;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.barra-vida-boss-interna {
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(90deg, #ffd400, #ff6a00);
+  transition: width 0.3s ease;
+}
+
+.smurf-com-botao .tenor-gif-embed {
+  width: 110px !important;
+  margin: 0 auto;
+  pointer-events: none;
+}
+
+.botao-na-mao {
+  margin-top: -10px;
+  background: #ff0033;
+  color: #fff;
+  font-weight: bold;
+  font-size: 0.75rem;
+  padding: 6px 10px;
+  border-radius: 20px;
+  display: inline-block;
+  box-shadow: 0 0 12px #ff0033;
+  opacity: 0.85;
+}
+
+.smurf-com-botao.alcancavel .botao-na-mao {
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 12px 26px;
+  opacity: 1;
+  animation: brilho 0.6s infinite alternate;
+}
+
+@keyframes brilho {
+  from { box-shadow: 0 0 10px #ff0033; }
+  to   { box-shadow: 0 0 28px #ff5577; }
+}
+
+/* o jogador (baianinho/koda) */
+.jogador {
+  position: absolute;
+  bottom: 6%;
+  left: 50%;
+  width: 170px;
+  transform: translateX(-50%);
+  transition: left 0.18s ease;
+  z-index: 10;
+  filter: drop-shadow(0 6px 6px rgba(0,0,0,0.6));
+}
+
+.jogador.pulando {
+  animation: pulo-jogador 0.5s ease;
+}
+
+@keyframes pulo-jogador {
+  0%   { transform: translateX(-50%) translateY(0); }
+  40%  { transform: translateX(-50%) translateY(-100px); }
+  100% { transform: translateX(-50%) translateY(0); }
+}
+
+.jogador.atingido {
+  animation: atingido 0.4s ease;
+}
+
+@keyframes atingido {
+  0%, 100% { filter: drop-shadow(0 6px 6px rgba(0,0,0,0.6)); }
+  50% { filter: drop-shadow(0 0 14px red) brightness(1.6); }
+}
+
+/* obstáculos (a barreira de atletismo) que vêm na direção do jogador */
+.obstaculo {
+  position: absolute;
+  top: 12%;
+  left: 50%;
+  width: 110px;
+  transform: translateX(-50%);
+  z-index: 8;
+  animation-name: aproximar;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+}
+
+@keyframes aproximar {
+  from { top: 12%;  width: 60px;  opacity: 0.6; }
+  to   { top: 82%;  width: 150px; opacity: 1;   }
+}
+
+.vida-jogador {
+  position: fixed;
+  top: 14px;
+  right: 14px;
+  font-size: 1.3rem;
+  z-index: 60;
+  text-shadow: 0 0 6px #000;
+}
+
+.placar {
+  position: fixed;
+  top: 44px;
+  right: 14px;
+  color: #2bf0ff;
+  font-family: monospace;
+  font-size: 0.9rem;
+  z-index: 60;
+  text-shadow: 0 0 6px #000;
+}
+
+
+/* bitcoins coletáveis */
+.bitcoin {
+  position: absolute;
+  top: 14%;
+  left: 50%;
+  width: 55px;
+  transform: translateX(-50%);
+  z-index: 9;
+  animation-name: aproximar-bitcoin;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+  filter: drop-shadow(0 0 10px #ffd700);
+}
+
+.bitcoin img {
+  width: 100%;
+  display: block;
+  mix-blend-mode: lighten;
+}
+
+@keyframes aproximar-bitcoin {
+  from { top: 14%; width: 35px; opacity: 0.7; transform: translateX(-50%) rotate(0deg); }
+  to   { top: 82%; width: 65px; opacity: 1;   transform: translateX(-50%) rotate(25deg); }
+}
+
+.jogador.invulneravel {
+  animation: piscar 0.15s infinite;
+}
+
+@keyframes piscar {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.instrucoes {
+  position: fixed;
+  top: 14px;
+  left: 14px;
+  color: #fff;
+  font-family: monospace;
+  font-size: 0.8rem;
+  z-index: 60;
+  background: rgba(0,0,0,0.4);
+  padding: 6px 10px;
+  border-radius: 6px;
+  line-height: 1.4;
+}
+
+.mensagem {
+  position: fixed;
+  top: 45%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 70;
+  color: #fff;
+  font-weight: bold;
+  font-size: 1.3rem;
+  text-align: center;
+  text-shadow: 0 0 10px #000;
+  display: none;
+}
+
+.botao-reiniciar {
+  display: inline-block;
+  margin-top: 14px;
+  background: #ff0033;
+  color: #fff;
+  font-size: 1rem;
+  padding: 10px 22px;
+  border-radius: 20px;
+  cursor: pointer;
+  box-shadow: 0 0 14px #ff0033;
+}
+
+/* =========================================================
+   PODER MATRIX — sobe do Koda até o Smurf
+   ========================================================= */
+.poder-gif {
+  position: absolute;
+  width: 130px;          /* mais largo para ser bem visível */
+  z-index: 20;
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: none;
+  image-rendering: auto;
+  filter: brightness(1.8) drop-shadow(0 0 12px #00ff88) drop-shadow(0 0 24px #00ff88);
+}
+
+.poder-gif.subindo {
+  animation: poder-subir 1.6s cubic-bezier(0.3, 0, 0.7, 1) forwards;
+}
+
+@keyframes poder-subir {
+  from {
+    bottom: 8%;
+    opacity: 0;
+    transform: translateX(-50%) scaleY(0.3);
+  }
+  10% {
+    opacity: 1;
+  }
+  to {
+    bottom: 74%;
+    opacity: 1;
+    transform: translateX(-50%) scaleY(1);
+  }
+}
+
+/* =========================================================
+   EXPLOSÃO no Smurf
+   ========================================================= */
+.explosao-gif {
+  position: absolute;
+  width: 260px;
+  z-index: 30;          /* acima do smurf (z-index 6) para tampar */
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: none;
+  /* top é definido via JS para coincidir com o smurf */
+}
+
+.explosao-gif.explodindo {
+  animation: explosao-aparecer 1.8s ease forwards;
+}
+
+@keyframes explosao-aparecer {
+  0%   { opacity: 0; transform: translate(-50%, -50%) scale(0.4); }
+  15%  { opacity: 1; transform: translate(-50%, -50%) scale(1.3); }
+  80%  { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
+}
+
+/* utilitário */
+.oculto { display: none !important; }
+
+/* =========================================================
+   RESPONSIVO — MOBILE
+   ========================================================= */
+@media (max-width: 600px) {
+  .smurf-com-botao { width: 90px; }
+  .boss-info        { width: 150px; }
+  .boss-nome        { font-size: 0.7rem; }
+  .barra-vida-boss  { height: 10px; }
+
+  .jogador  { width: 110px; }
+
+  .obstaculo { width: 80px !important; }
+  .bitcoin   { width: 40px !important; }
+
+  .poder-gif  { width: 80px; }
+  .explosao-gif { width: 180px; }
+
+  .instrucoes {
+    font-size: 0.65rem;
+    padding: 4px 8px;
+  }
+
+  .vida-jogador { font-size: 1rem; top: 8px; right: 8px; }
+  .placar       { font-size: 0.75rem; top: 36px; right: 8px; }
+  .mensagem     { font-size: 1rem; width: 90%; }
+
+  /* botões de toque — aparecem só no mobile */
+  .controles-touch {
+    display: flex !important;
+  }
+}
+
+/* botões de toque (ocultos por padrão no desktop) */
+.controles-touch {
+  display: none;
+  position: fixed;
+  bottom: 10px;
+  left: 0;
+  width: 100%;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: 0 10px;
+  z-index: 80;
+  pointer-events: none;
+}
+
+.controles-touch button {
+  pointer-events: all;
+  background: rgba(0,0,0,0.55);
+  border: 2px solid rgba(255,255,255,0.4);
+  border-radius: 50%;
+  color: #fff;
+  font-size: 1.5rem;
+  width: 56px;
+  height: 56px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+.controles-touch .grupo-lr {
+  display: flex;
+  gap: 10px;
+}
