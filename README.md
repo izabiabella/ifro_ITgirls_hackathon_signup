@@ -42,18 +42,18 @@ GitHub — versionamento e publicação do projeto.
 
 Uso de IA
 
-Claude
+Claude - 
 Finalidade: adaptação de funcionalidades, auxílio na correção de bugs e sugestões de
 implementação.
 Partes do projeto apoiadas por IA: funcionalidades e validações.
 Revisão da equipe: as sugestões foram analisadas, testadas e implementadas somente quando
 consideradas adequadas ao contexto do projeto.
-ChatGPT
+ChatGPT - 
 Finalidade: auxílio na correção de bugs e ajustes de interface.
 Partes do projeto apoiadas por IA: design da interface e implementação de funcionalidades.
 Revisão da equipe: as respostas foram analisadas e adaptadas às necessidades do projeto,
 incluindo ajustes de cores, mensagens e comportamentos da interface.
-Gemini
+Gemini - 
 Finalidade: apoio na publicação do repositório e hospedagem do site.
 Partes do projeto apoiadas por IA: configuração do repositório e publicação do projeto no
 GitHub.
