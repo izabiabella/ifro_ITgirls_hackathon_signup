@@ -8,6 +8,7 @@ Jennifer Neves Santana
 Curso/Turma: 3º ADS
 Categoria: Pior Experiência de Usuário
 
+
 Problema
 
 O problema abordado pelo projeto consiste na ausência de um sistema próprio de inscrição para o
@@ -17,10 +18,12 @@ Solução
 Foi desenvolvido um site de inscrição composto por três etapas, projetado intencionalmente para
 proporcionar uma experiência de usuário frustrante.
 
+
 Link do MVP
 
 Acesse o projeto:
 https://izabiabella.github.io/ifro_ITgirls_hackathon_signup/
+
 
 Como testar
 
@@ -29,11 +32,13 @@ Preencha todos os campos da Etapa 1 e da Etapa 2 até que todas as validações 
 concluídas (campos em verde);
 Conclua o minijogo para finalizar a experiência.
 
+
 Tecnologias utilizadas
 
 Figma — prototipação das telas;
 VS Code — desenvolvimento e edição do código;
 GitHub — versionamento e publicação do projeto.
+
 
 Uso de IA
 
@@ -55,11 +60,13 @@ GitHub.
 Revisão da equipe: as soluções sugeridas foram testadas e implementadas após validação pela
 equipe.
 
+
 O que funciona
 
  Funcionalidades do sistema;
  Validações dos formulários;
  Minijogo final.
+
 
  O que ainda pode melhorar
  
@@ -68,6 +75,7 @@ atendem aos critérios técnicos;
 Adicionar um banco de dados para possibilitar mensagens personalizadas ao final da
 experiência;
 Implementar um temporizador para medir o tempo necessário para concluir a experiência.
+
 
 Princípios de UX/UI Violados
 
@@ -78,6 +86,7 @@ Heurística violada: Heurística 3 de Nielsen.
 Proposta de melhoria: reduzir o número de etapas e tornar o minijogo opcional ou apenas
 complementar.
 
+
 Consistência e padrões
 
 Algumas interações utilizam comportamentos inesperados ou diferentes dos padrões normalmente
@@ -86,11 +95,13 @@ Heurísticas violadas: Heurísticas 4 e 5 de Nielsen.
 Proposta de melhoria: seguir o mesmo padrão de outros sites que possuem o mesmo objetivo da
 solução apresentada pela equipe e solicitar apenas informações realmente necessárias.
 
+
 Prevenção de erros
 
 O sistema não auxilia adequadamente o usuário a evitar erros durante o preenchimento.
 Heurísticas violadas: Heurísticas 9 e 10 de Nielsen.
 Proposta de melhoria: fornecer mensagens de erro e de recuperação compreensíveis.
+
 
 Eficiência de uso
 
@@ -98,11 +109,13 @@ O sistema exige mais esforço do que o necessário para concluir uma tarefa simp
 Heurística violada: Heurística 7 de Nielsen.
 Proposta de melhoria: remover obstáculos artificiais do fluxo.
 
+
 Design minimalista e foco na tarefa
 
 Elementos da interface desviam a atenção do objetivo principal do usuário.
 Heurística violada: Heurística 8 de Nielsen.
 Proposta de melhoria: adotar um design mais minimalista, evitando a poluição visual.
+
 
 Acessibilidade
 
