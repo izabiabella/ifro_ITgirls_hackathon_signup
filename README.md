@@ -2,10 +2,10 @@ IFRO ADS NoSignUp
 
 Equipe
 
-Nome da equipe: IT Girls
+Nome da equipe: IT Girls;
 Integrantes: Anna Jullya Gonçalves Pereira, Beatriz Hübner Razera, Geovana Lauer Miranda e
-Jennifer Neves Santana
-Curso/Turma: 3º ADS
+Jennifer Neves Santana;
+Curso/Turma: 3º ADS;
 Categoria: Pior Experiência de Usuário
 
 
