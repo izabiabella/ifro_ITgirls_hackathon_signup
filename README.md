@@ -79,7 +79,7 @@ Implementar um temporizador para medir o tempo necessário para concluir a exper
 
 Princípios de UX/UI Violados
 
-Controle e liberdade do usuário
+Controle e liberdade do usuário:
 O usuário possui pouca autonomia durante o processo, sendo obrigado a concluir todas as etapas para
 finalizar a inscrição.
 Heurística violada: Heurística 3 de Nielsen.
