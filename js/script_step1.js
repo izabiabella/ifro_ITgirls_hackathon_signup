@@ -198,7 +198,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (!todosCamposOk) {
       errorMessageBox.style.color = "#37FA4F";
-      errorMessageBox.textContent = "✅ Erro";
+      errorMessageBox.textContent = "✅ Erro, parece que falta caracteres...";
       return;
     }
 
