@@ -175,7 +175,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         errorMessageBox.style.color   = "#37FA4F";
-        errorMessageBox.textContent   = "✅ Erro";
+        errorMessageBox.textContent   = "✅ Erro, já verificou os caracteres?";
         return;
       }
 
