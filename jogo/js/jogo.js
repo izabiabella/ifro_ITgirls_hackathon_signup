@@ -46,6 +46,96 @@ let timeoutBitcoin   = null;
 let timeoutSmurf     = null;
 let raiaSmurfCongelada = 1; // raia em que o smurf ficará parado ao ser atingido
 
+// ── AVISO JUCOSO — contador de cliques nas setas ─────────────
+let cliquesSetas         = 0;
+let avisoSetasEmExibicao = false;
+
+const mensagensAvisoSetas = [
+  "👀 Psiu... olha as instruções lá em cima antes de continuar!",
+  "🕹️ Tente jogar de outra forma — as setas sozinhas não vão te salvar!",
+  "😅 Tá perdido? As instruções estão ali no cantinho esperando você...",
+  "🤔 Interessante estratégia... mas não tá funcionando, hein?",
+  "💡 Dica quente: deslize pra cima ou toque rápido pra pular a barreira!",
+  "🧐 Hmm, parece que alguém precisa de um mapa... olha as instruções!",
+  "🔥 Vai ficar apertando botão à toa ou vai aprender a jogar?",
+  "🪙 As setas movem o personagem, mas os bitcoins é que dão poder!",
+];
+
+function mostrarAvisoSetas() {
+  if (avisoSetasEmExibicao) return;
+  avisoSetasEmExibicao = true;
+  cliquesSetas = 0; // reseta pra próxima rodada
+
+  // injeta as keyframes se ainda não existirem
+  if (!document.getElementById("aviso-setas-style")) {
+    const style = document.createElement("style");
+    style.id = "aviso-setas-style";
+    style.textContent = `
+      @keyframes aviso-entrar {
+        from { opacity: 0; transform: translateX(-50%) translateY(24px) scale(0.9); }
+        to   { opacity: 1; transform: translateX(-50%) translateY(0)     scale(1);   }
+      }
+      @keyframes aviso-sair {
+        from { opacity: 1; transform: translateX(-50%) translateY(0)     scale(1);   }
+        to   { opacity: 0; transform: translateX(-50%) translateY(24px) scale(0.9); }
+      }
+      @keyframes aviso-pulsar {
+        0%, 100% { box-shadow: 0 0 18px rgba(255,100,0,0.7); }
+        50%       { box-shadow: 0 0 36px rgba(255,50,0,1);    }
+      }
+    `;
+    document.head.appendChild(style);
+  }
+
+  const idx   = Math.floor(Math.random() * mensagensAvisoSetas.length);
+  const aviso = document.createElement("div");
+  aviso.id    = "aviso-setas";
+  aviso.innerHTML = `<span style="font-size:1.4rem;display:block;margin-bottom:4px">🎮</span>${mensagensAvisoSetas[idx]}`;
+  Object.assign(aviso.style, {
+    position:    "fixed",
+    bottom:      "92px",
+    left:        "50%",
+    transform:   "translateX(-50%)",
+    background:  "linear-gradient(135deg, #ff6a00, #ee0979)",
+    color:       "#fff",
+    fontWeight:  "bold",
+    fontSize:    "0.88rem",
+    lineHeight:  "1.4",
+    padding:     "14px 22px",
+    borderRadius:"18px",
+    zIndex:      "200",
+    textAlign:   "center",
+    maxWidth:    "82%",
+    boxShadow:   "0 0 18px rgba(255,100,0,0.7)",
+    animation:   "aviso-entrar 0.35s ease forwards, aviso-pulsar 1s ease-in-out infinite",
+    cursor:      "pointer",
+  });
+
+  // toque/clique no aviso também o fecha
+  aviso.addEventListener("click",      fecharAviso);
+  aviso.addEventListener("touchstart", fecharAviso, { passive: true });
+
+  document.body.appendChild(aviso);
+
+  const timer = setTimeout(fecharAviso, 3500);
+
+  function fecharAviso() {
+    clearTimeout(timer);
+    aviso.removeEventListener("click",      fecharAviso);
+    aviso.removeEventListener("touchstart", fecharAviso);
+    aviso.style.animation = "aviso-sair 0.35s ease forwards";
+    setTimeout(() => {
+      aviso.remove();
+      avisoSetasEmExibicao = false;
+    }, 350);
+  }
+}
+
+function contarCliqueSeta() {
+  cliquesSetas++;
+  if (cliquesSetas > 3) mostrarAvisoSetas();
+}
+
 // ── MÚSICA — persiste entre reloads via localStorage ─────────
 function iniciarMusica() {
   if (musicaIniciada) return;
@@ -100,61 +190,9 @@ function ligarBotaoToque(elemento, acao) {
   elemento.addEventListener("click", (e) => { e.preventDefault(); acao(); });
 }
 
-// ── POP-UP BRINCALHÃO PARA OS BOTÕES DE TOQUE MOBILE ─────────
-// Os botões ⬅️ ➡️ ⬆️ continuam fazendo exatamente o que sempre
-// fizeram (mover/saltar) — isso aqui só ACRESCENTA um aviso de
-// brincadeira depois que o usuário insiste mais de 3 vezes
-// neles, sem alterar em nada o funcionamento original.
-const FRASES_POPUP_BOTOES_TOQUE = [
-  "Se quiser mesmo continuar, tente jogar de outra forma 😉",
-  "Esses botões já cansaram de te ouvir... já tentou outro jeito?",
-  "Insistência detectada. Resultado: o mesmo de sempre 😅",
-  "Apertar de novo não muda o destino. Tente diferente.",
-  "Os botões estão de greve hoje. Bora pensar fora da caixinha?"
-];
-
-const LIMITE_CLIQUES_POPUP_TOQUE = 3; // a partir do 4º toque, mostra o pop-up
-let cliquesBotoesToque = 0;
-
-function obterPopupBotaoToque() {
-  let el = document.getElementById("popup-botao-bad-ux");
-  if (el) return el;
-
-  el = document.createElement("div");
-  el.id = "popup-botao-bad-ux";
-  el.className = "popup-botao-bad-ux oculto";
-  el.innerHTML = `
-    <div class="popup-botao-bad-ux-caixa">
-      <p id="popup-botao-bad-ux-texto"></p>
-      <button type="button" id="popup-botao-bad-ux-fechar">OK</button>
-    </div>
-  `;
-  document.body.appendChild(el);
-
-  const fechar = () => el.classList.add("oculto");
-  el.querySelector("#popup-botao-bad-ux-fechar").addEventListener("click", fechar);
-  el.addEventListener("click", (e) => { if (e.target === el) fechar(); });
-
-  return el;
-}
-
-function mostrarPopupBotaoToque() {
-  const el = obterPopupBotaoToque();
-  const frase = FRASES_POPUP_BOTOES_TOQUE[Math.floor(Math.random() * FRASES_POPUP_BOTOES_TOQUE.length)];
-  el.querySelector("#popup-botao-bad-ux-texto").textContent = frase;
-  el.classList.remove("oculto");
-}
-
-function contarCliqueBotaoToque() {
-  cliquesBotoesToque++;
-  if (cliquesBotoesToque > LIMITE_CLIQUES_POPUP_TOQUE) {
-    mostrarPopupBotaoToque();
-  }
-}
-
-ligarBotaoToque(document.getElementById("btn-esq"),  () => { contarCliqueBotaoToque(); moverJogador(-1); });
-ligarBotaoToque(document.getElementById("btn-dir"),  () => { contarCliqueBotaoToque(); moverJogador(+1); });
-ligarBotaoToque(document.getElementById("btn-pulo"), () => { contarCliqueBotaoToque(); pular(); });
+ligarBotaoToque(document.getElementById("btn-esq"),  () => { contarCliqueSeta(); moverJogador(-1); });
+ligarBotaoToque(document.getElementById("btn-dir"),  () => { contarCliqueSeta(); moverJogador(+1); });
+ligarBotaoToque(document.getElementById("btn-pulo"), () => { contarCliqueSeta(); pular(); });
 
 // ── MOBILE: GESTOS DE SWIPE NA TELA DE JOGO ──────────────────
 // Além dos botões, dá pra jogar arrastando o dedo:
