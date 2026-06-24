@@ -100,9 +100,61 @@ function ligarBotaoToque(elemento, acao) {
   elemento.addEventListener("click", (e) => { e.preventDefault(); acao(); });
 }
 
-ligarBotaoToque(document.getElementById("btn-esq"),  () => moverJogador(-1));
-ligarBotaoToque(document.getElementById("btn-dir"),  () => moverJogador(+1));
-ligarBotaoToque(document.getElementById("btn-pulo"), () => pular());
+// ── POP-UP BRINCALHÃO PARA OS BOTÕES DE TOQUE MOBILE ─────────
+// Os botões ⬅️ ➡️ ⬆️ continuam fazendo exatamente o que sempre
+// fizeram (mover/saltar) — isso aqui só ACRESCENTA um aviso de
+// brincadeira depois que o usuário insiste mais de 3 vezes
+// neles, sem alterar em nada o funcionamento original.
+const FRASES_POPUP_BOTOES_TOQUE = [
+  "Se quiser mesmo continuar, tente jogar de outra forma 😉",
+  "Esses botões já cansaram de te ouvir... já tentou outro jeito?",
+  "Insistência detectada. Resultado: o mesmo de sempre 😅",
+  "Apertar de novo não muda o destino. Tente diferente.",
+  "Os botões estão de greve hoje. Bora pensar fora da caixinha?"
+];
+
+const LIMITE_CLIQUES_POPUP_TOQUE = 3; // a partir do 4º toque, mostra o pop-up
+let cliquesBotoesToque = 0;
+
+function obterPopupBotaoToque() {
+  let el = document.getElementById("popup-botao-bad-ux");
+  if (el) return el;
+
+  el = document.createElement("div");
+  el.id = "popup-botao-bad-ux";
+  el.className = "popup-botao-bad-ux oculto";
+  el.innerHTML = `
+    <div class="popup-botao-bad-ux-caixa">
+      <p id="popup-botao-bad-ux-texto"></p>
+      <button type="button" id="popup-botao-bad-ux-fechar">OK</button>
+    </div>
+  `;
+  document.body.appendChild(el);
+
+  const fechar = () => el.classList.add("oculto");
+  el.querySelector("#popup-botao-bad-ux-fechar").addEventListener("click", fechar);
+  el.addEventListener("click", (e) => { if (e.target === el) fechar(); });
+
+  return el;
+}
+
+function mostrarPopupBotaoToque() {
+  const el = obterPopupBotaoToque();
+  const frase = FRASES_POPUP_BOTOES_TOQUE[Math.floor(Math.random() * FRASES_POPUP_BOTOES_TOQUE.length)];
+  el.querySelector("#popup-botao-bad-ux-texto").textContent = frase;
+  el.classList.remove("oculto");
+}
+
+function contarCliqueBotaoToque() {
+  cliquesBotoesToque++;
+  if (cliquesBotoesToque > LIMITE_CLIQUES_POPUP_TOQUE) {
+    mostrarPopupBotaoToque();
+  }
+}
+
+ligarBotaoToque(document.getElementById("btn-esq"),  () => { contarCliqueBotaoToque(); moverJogador(-1); });
+ligarBotaoToque(document.getElementById("btn-dir"),  () => { contarCliqueBotaoToque(); moverJogador(+1); });
+ligarBotaoToque(document.getElementById("btn-pulo"), () => { contarCliqueBotaoToque(); pular(); });
 
 // ── MOBILE: GESTOS DE SWIPE NA TELA DE JOGO ──────────────────
 // Além dos botões, dá pra jogar arrastando o dedo:

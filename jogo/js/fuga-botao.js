@@ -89,7 +89,7 @@ botao.addEventListener("mouseenter", fugir);
 botao.addEventListener("click", () => {
   if (permitirClique) {
     alert("Parabéns! Você venceu o pior botão do evento. 🎉");
-    window.location.href = "final.html";
+    // troque por: window.location.href = "proxima-tela.html";
   }
 });
 
