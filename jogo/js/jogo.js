@@ -91,25 +91,26 @@ function mostrarAvisoSetas() {
   const aviso = document.createElement("div");
   aviso.id    = "aviso-setas";
   aviso.innerHTML = `<span style="font-size:1.4rem;display:block;margin-bottom:4px">🎮</span>${mensagensAvisoSetas[idx]}`;
-  Object.assign(aviso.style, {
-    position:    "fixed",
-    bottom:      "92px",
-    left:        "50%",
-    transform:   "translateX(-50%)",
-    background:  "linear-gradient(135deg, #ff6a00, #ee0979)",
-    color:       "#fff",
-    fontWeight:  "bold",
-    fontSize:    "0.88rem",
-    lineHeight:  "1.4",
-    padding:     "14px 22px",
-    borderRadius:"18px",
-    zIndex:      "200",
-    textAlign:   "center",
-    maxWidth:    "82%",
-    boxShadow:   "0 0 18px rgba(255,100,0,0.7)",
-    animation:   "aviso-entrar 0.35s ease forwards, aviso-pulsar 1s ease-in-out infinite",
-    cursor:      "pointer",
-  });
+// Dentro da sua função mostrarAvisoSetas()
+Object.assign(aviso.style, {
+  position:    "fixed",
+  top:         "60px", // <-- Mudamos de bottom para top para fugir dos dedos
+  left:        "50%",
+  transform:   "translateX(-50%)",
+  background:  "linear-gradient(135deg, #ff6a00, #ee0979)",
+  color:       "#fff",
+  fontWeight:  "bold",
+  fontSize:    "0.88rem",
+  lineHeight:  "1.4",
+  padding:     "14px 22px",
+  borderRadius:"18px",
+  zIndex:      "9999", // <-- Valor altíssimo para garantir sobreposição
+  textAlign:   "center",
+  maxWidth:    "82%",
+  boxShadow:   "0 0 18px rgba(255,100,0,0.7)",
+  animation:   "aviso-entrar 0.35s ease forwards, aviso-pulsar 1s ease-in-out infinite",
+  cursor:      "pointer",
+});
 
   // toque/clique no aviso também o fecha
   aviso.addEventListener("click",      fecharAviso);
@@ -466,14 +467,21 @@ botaoNaMao.addEventListener("click", () => {
   window.location.href = "../index_final.html";
 });
 
-// ── CONTROLES ────────────────────────────────────────────────
+  // ── CONTROLES ────────────────────────────────────────────────
 document.addEventListener("keydown", (e) => {
   switch (e.key) {
-    case "ArrowLeft":  moverJogador(-1); break;
-    case "ArrowRight": moverJogador(+1); break;
+    case "ArrowLeft":  
+      contarCliqueSeta(); // <-- Adicionado
+      moverJogador(-1); 
+      break;
+    case "ArrowRight": 
+      contarCliqueSeta(); // <-- Adicionado
+      moverJogador(+1); 
+      break;
     case "ArrowUp":
     case " ":
       e.preventDefault();
+      contarCliqueSeta(); // <-- Adicionado
       pular();
       break;
   }
